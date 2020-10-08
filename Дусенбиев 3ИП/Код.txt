@@ -1,0 +1,79 @@
+@using CalculatorApp.Models
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Index", "CalcController")) { 
+<div>
+    <h2>@Html.Label("Enter first number") : @Html.TextBox("num1")</h2>
+    <h2>@Html.Label("Enter second number") : @Html.TextBox("num2")</h2>
+</div>
+<div>   
+    <h2>
+
+        @Html.RadioButton("calkey", "0") +
+           <br>
+        @Html.RadioButton("calkey", "1") -
+           <br>
+        @Html.RadioButton("calkey", "2") *
+           <br>
+        @Html.RadioButton("calkey", "3") /
+    </h2>            
+</div>
+    <input type="submit" name="Index" value="Index"/>
+}
+Модель:
+
+namespace CalculatorApp.Models
+{
+    public class Calculations : Controller
+    {
+        //
+        // GET: /Calculations/
+        public int num1 { get; set; }
+        public int num2 { get; set; }
+        public int result { get; set; }
+
+        public bool add { get; set; }
+        public bool sub { get; set; }
+        public bool mult { get; set; }
+        public bool div  { get; set; }
+    }
+}
+Контроллер:
+
+namespace CalculatorApp.Controllers
+{
+    public class CalcController : Controller
+    {     
+        public ActionResult Index(Calculations calc)
+        {
+            int selectedFunction = Convert.ToInt32(Request["calkey"]);
+
+            switch (selectedFunction)
+            {
+                case 0:
+                    calc.result = calc.num1 + calc.num2;
+                    break;
+                case 1:
+                        calc.result = calc.num1 - calc.num2;
+                        break;
+                case 2:
+                        calc.result = calc.num1 * calc.num2;
+                        break;
+                case 3:
+                        if (calc.num2 > 0)
+                        {
+                            calc.result = calc.num1 / calc.num2;
+                        }
+                        break; 
+            }
+            return View(calc);
+        }
+
+        public ActionResult Result(Calculations calc)
+        {
+
+            return View(calc);
+        }
+    }
